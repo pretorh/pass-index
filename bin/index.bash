@@ -3,7 +3,7 @@
 NAME="pass-index v0.0.1"
 INDEX_NAME=.index
 
-echo "$NAME" >&2
+((PASS_INDEX_SILENT)) || echo "$NAME" >&2
 
 if [ "$1" = "show" ] ; then
     read -p "enter name: " -r name
