@@ -7,7 +7,7 @@ clean:
 	rm -rf tests/.gpg
 
 install-local:
-	install -v bin/uuid.bash ~/.password-store/.extensions/
+	install -v bin/index.bash ~/.password-store/.extensions/
 
 test: $(TESTS)
 

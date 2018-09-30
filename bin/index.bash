@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-NAME="pass-uuid"
+NAME="pass-index v0.0.1"
 
 echo "$NAME" >&2
 

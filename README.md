@@ -1,12 +1,14 @@
-# pass-uid
+# pass-index
+
 password store extention for using uuid filenames
 
 usage:
 
 ```
-pass uuid [command]
+pass index [command]
 ```
 
 ## commands:
 
-- `show` - read the name from `stdin`, resolve the uuid, and show the password
+- `show` - read the name from `stdin`, resolve the key-file, and show the password
+    - `echo "example.com" | pass index show`
