@@ -28,6 +28,9 @@ dump_info() {
     echo "  GNUPGHOME=$(realpath "$GNUPGHOME")"
     echo "  PASSWORD_STORE_DIR=$PASSWORD_STORE_DIR"
     echo "  PASSWORD_STORE_EXTENSIONS_DIR=$(realpath "$PASSWORD_STORE_EXTENSIONS_DIR")"
+
+    echo "files in store directory:"
+    find "$PASSWORD_STORE_DIR" -type f -print0 | xargs -0 -Iname echo "  name"
 }
 
 run() {
