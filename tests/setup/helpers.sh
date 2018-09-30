@@ -34,7 +34,7 @@ dump_info() {
 }
 
 run() {
-    name="$(echo "$1" | sed -s 's|_| |g')"
+    pretty_name=${1//_/ }
 
     # run function, fail on first error
     # https://stackoverflow.com/a/33704639/1016377
@@ -43,8 +43,8 @@ run() {
     error=$?
     set -e
 
-    ((error)) && echo "[FAIL]: $name" && failed=1 && return
-    echo "[PASS] $name"
+    ((error)) && echo "[FAIL]: $pretty_name" && failed=1 && return
+    echo "[PASS] $pretty_name"
 }
 
 fail() {
