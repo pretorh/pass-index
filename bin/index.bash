@@ -9,5 +9,5 @@ if [ "$1" = "show" ] ; then
     id="$(pass show index | grep "$name" | awk -F ' ' '{print $1}')"
     pass show "$id"
 elif [ -z "$1" ] ; then
-    pass show index
+    pass show index | awk -F ' ' '{print $2}'
 fi
