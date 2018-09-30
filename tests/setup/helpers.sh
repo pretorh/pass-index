@@ -32,6 +32,17 @@ init_password_store() {
     pass init $GPG_ID >"$LOG_FILE"
 }
 
+setup_test_passwords() {
+    # initialize a pass store with some test data
+    cat <<EOF |
+test-uuid example.com
+uuid2 example.org
+EOF
+    pass add .index --multiline >"$LOG_FILE"
+    echo "password for test" | pass add test-uuid --echo
+    echo "password for 2" | pass add uuid2 --echo
+}
+
 failed=0
 tests_run=0
 
