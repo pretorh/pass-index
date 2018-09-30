@@ -11,4 +11,7 @@ if [ "$1" = "show" ] ; then
     pass show "$id"
 elif [ -z "$1" ] ; then
     pass show $INDEX_NAME | awk -F ' ' '{print $2}'
+else
+    ((PASS_INDEX_SILENT)) || echo "$NAME: invalid command '$1'" >&2
+    exit 1
 fi

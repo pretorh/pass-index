@@ -73,6 +73,7 @@ run() {
 }
 
 fail() {
+    echo "" >&2
     echo "$1" >&2
     echo -e "$2" >&2
     false
