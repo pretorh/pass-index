@@ -47,6 +47,12 @@ run() {
     echo "[PASS] $name"
 }
 
+fail() {
+    echo "$1" >&2
+    echo -e "$2" >&2
+    false
+}
+
 finish() {
     ((failed)) && dump_info
     exit $failed
