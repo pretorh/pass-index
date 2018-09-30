@@ -19,9 +19,33 @@ PASSWORD_STORE_EXTENSIONS_DIR=$TESTS/../bin
 PASSWORD_STORE_ENABLE_EXTENSIONS=true
 export PASSWORD_STORE_DIR PASSWORD_STORE_GPG_OPTS PASSWORD_STORE_EXTENSIONS_DIR PASSWORD_STORE_ENABLE_EXTENSIONS
 
+# pass index
+
+PASS_INDEX_SILENT=1
+export PASS_INDEX_SILENT
+
 # helpers
+LOG_FILE=$PASSWORD_STORE_DIR/tests.log
+export LOG_FILE
+
+init_password_store() {
+    pass init $GPG_ID >"$LOG_FILE"
+}
+
+setup_test_passwords() {
+    # initialize a pass store with some test data
+    cat <<EOF |
+test-uuid example.com
+uuid2 example.org
+EOF
+    pass add .index --multiline >"$LOG_FILE"
+    echo "password for test" | pass add test-uuid --echo
+    echo "password for 2" | pass add uuid2 --echo
+}
 
 failed=0
+tests_run=0
+
 dump_info() {
     echo "dump:"
     echo "  GPG_OPTS=$GPG_OPTS"
@@ -34,7 +58,8 @@ dump_info() {
 }
 
 run() {
-    name="$(echo "$1" | sed -s 's|_| |g')"
+    pretty_name=${1//_/ }
+    tests_run=$((tests_run + 1))
 
     # run function, fail on first error
     # https://stackoverflow.com/a/33704639/1016377
@@ -43,11 +68,12 @@ run() {
     error=$?
     set -e
 
-    ((error)) && echo "[FAIL]: $name" && failed=1 && return
-    echo "[PASS] $name"
+    ((error)) && echo "not ok $tests_run $pretty_name" && failed=1 && return
+    echo "ok $tests_run $pretty_name"
 }
 
 fail() {
+    echo "" >&2
     echo "$1" >&2
     echo -e "$2" >&2
     false
@@ -55,7 +81,10 @@ fail() {
 
 finish() {
     ((failed)) && dump_info
-    exit $failed
+    true
 }
 
 trap finish EXIT
+
+expected_test_count="$(grep -c "^run " "$0")"
+echo "1..$expected_test_count"
