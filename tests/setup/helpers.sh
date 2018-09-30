@@ -22,6 +22,8 @@ export PASSWORD_STORE_DIR PASSWORD_STORE_GPG_OPTS PASSWORD_STORE_EXTENSIONS_DIR 
 # helpers
 
 failed=0
+tests_run=0
+
 dump_info() {
     echo "dump:"
     echo "  GPG_OPTS=$GPG_OPTS"
@@ -35,6 +37,7 @@ dump_info() {
 
 run() {
     pretty_name=${1//_/ }
+    tests_run=$((tests_run + 1))
 
     # run function, fail on first error
     # https://stackoverflow.com/a/33704639/1016377
@@ -43,8 +46,8 @@ run() {
     error=$?
     set -e
 
-    ((error)) && echo "[FAIL]: $pretty_name" && failed=1 && return
-    echo "[PASS] $pretty_name"
+    ((error)) && echo "not ok $tests_run $pretty_name" && failed=1 && return
+    echo "ok $tests_run $pretty_name"
 }
 
 fail() {
@@ -55,7 +58,10 @@ fail() {
 
 finish() {
     ((failed)) && dump_info
-    exit $failed
+    true
 }
 
 trap finish EXIT
+
+expected_test_count="$(grep -c "^run " "$0")"
+echo "1..$expected_test_count"
