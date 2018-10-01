@@ -2,6 +2,7 @@
 
 NAME="pass-index v0.0.1"
 INDEX_NAME=.index
+UUIDGEN=${PASS_INDEX_UUID_GENERATOR-uuidgen}
 
 ((PASS_INDEX_SILENT)) || echo "$NAME" >&2
 
@@ -13,7 +14,7 @@ elif [ -z "$1" ] ; then
     pass show $INDEX_NAME | awk -F ' ' '{print $2}'
 elif [ "$1" = "create" ] ; then
     read -p "enter name: " -r name
-    id="$($PASS_INDEX_UUID_GENERATOR)"
+    id="$($UUIDGEN)"
     cat << EOF |
 $(pass show $INDEX_NAME 2>/dev/null)
 $id $name
