@@ -2,10 +2,34 @@
 source tests/setup/helpers.sh
 
 init_password_store
-echo "passname1" | pass index create
+cat << EOF |
+passname1
+password1
+password1
+EOF
+PASS_INDEX_UUID_GENERATOR='echo uuid1' pass index create
 
 updates_the_index_file() {
     pass show .index | grep "^uuid1 passname1$" >"$LOG_FILE"
 }
 
+does_not_create_file_named_based_on_password_name() {
+    if pass show passname1 >"$LOG_FILE" 2>&1 ; then
+        fail "expected no file named passname"
+    fi
+}
+
+create_file_based_on_uuid() {
+    pass show uuid1 >"$LOG_FILE" || \
+        fail "expected a file named based on uuid genetator" "but no file named uuid1"
+}
+
+passwords_are_readable_as_normal_pass_files() {
+    pass show uuid1 | grep "password1" >"$LOG_FILE" || \
+        fail "expected password to be readable from generated filename"
+}
+
 run updates_the_index_file
+run does_not_create_file_named_based_on_password_name
+run create_file_based_on_uuid
+run passwords_are_readable_as_normal_pass_files

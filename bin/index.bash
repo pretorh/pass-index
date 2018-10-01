@@ -13,11 +13,13 @@ elif [ -z "$1" ] ; then
     pass show $INDEX_NAME | awk -F ' ' '{print $2}'
 elif [ "$1" = "create" ] ; then
     read -p "enter name: " -r name
+    id="$($PASS_INDEX_UUID_GENERATOR)"
     cat << EOF |
 $(pass show $INDEX_NAME 2>/dev/null)
-uuid1 $name
+$id $name
 EOF
     pass insert --multiline $INDEX_NAME
+    pass insert "$id"
 else
     ((PASS_INDEX_SILENT)) || echo "$NAME: invalid command '$1'" >&2
     exit 1
