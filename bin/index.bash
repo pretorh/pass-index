@@ -44,6 +44,7 @@ fi
 case "$1" in
     show)           shift; cmd_passindex_show "$@" ;;
     create)         shift; cmd_passindex_create "$@" ;;
+    ls)             shift; cmd_passindex_list "$@" ;;
     --version)      shift; echo "$NAME" ;;
     *)              _cmd_passindex_fail "invalid command '$1'" ;
 esac
