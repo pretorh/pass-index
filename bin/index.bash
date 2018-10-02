@@ -3,6 +3,7 @@
 NAME="pass-index v0.0.1"
 INDEX_NAME=.index
 UUIDGEN=${PASS_INDEX_UUID_GENERATOR-uuidgen}
+GETOPT=${GETOPT?file must be sources by pass or GETOPT env var set}
 
 _cmd_passindex_fail() {
     ((PASS_INDEX_SILENT)) || echo "$*" >&2
@@ -18,13 +19,23 @@ EOF
 }
 
 cmd_passindex_create() {
+    local args errs opt_generate_length=0
+    args="$($GETOPT -o g: -l generate: -n "$NAME" -- "$@")"
+    errs=$?
+    eval set -- "$args"
+    while true; do case $1 in
+        -g|--generate) opt_generate_length="$2"; shift 2 ;;
+        --) shift; break ;;
+    esac done
+    [ $errs -ne 0 ] && _cmd_passindex_fail "[-g COUNT|--generate=COUNT]"
+
     local name id
     read -r -p "enter name: " name
     id="$($UUIDGEN)"
 
     _cmd_passindex_update_index "$id" "$name"
-    if [ "$1" = "--generate" ] ; then
-        pass generate "$id" "$2"
+    if [ "$opt_generate_length" -gt 0 ] ; then
+        pass generate "$id" "$opt_generate_length"
     else
         pass insert "$id"
     fi
