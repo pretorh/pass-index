@@ -42,10 +42,21 @@ cmd_passindex_create() {
 }
 
 cmd_passindex_show() {
+    local args errs opt_clip=""
+    args="$($GETOPT -o c -l clip -n "$NAME" -- "$@")"
+    errs=$?
+    eval set -- "$args"
+    while true; do case $1 in
+        -c|--clip) opt_clip="--clip"; shift ;;
+        --) shift; break ;;
+    esac done
+    [ $errs -ne 0 ] && _cmd_passindex_fail "[-c|--clip]"
+
     local name id
     read -r -p "enter name: " name
     id="$(pass show $INDEX_NAME | grep "$name" | awk -F ' ' '{print $1}')"
-    pass show "$id"
+
+    pass show "$id" "$opt_clip"
 }
 
 cmd_passindex_list() {

@@ -36,7 +36,19 @@ ls_command_also_shows_password_named_without_keys() {
     echo "$output" | grep -v "uuid2" > "$LOG_FILE" || fail "found uuid" "$output"
 }
 
+can_copy_password_to_clipboard() {
+    output="$(echo "example.com" | pass index show --clip)"
+    if echo "$output" | grep "password for test" >"$LOG_FILE" ; then
+        fail "show --clip wrote password to stdout" "$output"
+    fi
+
+    pasted="$(paste_from_clipboard)"
+    echo "$pasted" | grep "^password for test$" >"$LOG_FILE" \
+        || fail "did not copy password to clipboard" "$pasted"
+}
+
 run can_show_password_for_an_item_named_on_stdin
 run show_all_items_when_no_command_specified
 run show_all_items_when_no_command_specified_without_keys
 run ls_command_also_shows_password_named_without_keys
+run can_copy_password_to_clipboard

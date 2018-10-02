@@ -79,6 +79,14 @@ fail() {
     false
 }
 
+paste_from_clipboard() {
+    if [ "$(uname)" = "Darwin" ] ; then
+        pbpaste
+    else
+        xclip -out
+    fi
+}
+
 finish() {
     ((failed)) && dump_info
     true
