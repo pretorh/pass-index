@@ -21,8 +21,13 @@ cmd_passindex_create() {
     local name id
     read -r -p "enter name: " name
     id="$($UUIDGEN)"
+
     _cmd_passindex_update_index "$id" "$name"
-    pass insert "$id"
+    if [ "$1" = "--generate" ] ; then
+        pass generate "$id" "$2"
+    else
+        pass insert "$id"
+    fi
 }
 
 cmd_passindex_show() {
