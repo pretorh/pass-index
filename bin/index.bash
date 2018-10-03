@@ -10,6 +10,11 @@ _passindex_fail() {
     exit 1
 }
 
+_passindex_warn_if_unused_param_set() {
+    [ -z "$1" ] && return
+    ((PASS_INDEX_SILENT)) || echo "warning: $SUBCOMMAND does not use $2" >&2
+}
+
 _passindex_update_index() {
     cat << EOF |
 $(pass show $INDEX_NAME 2>/dev/null)
@@ -28,11 +33,15 @@ cmd_passindex_create() {
         cmd="pass generate $id $OPT_GENERATE_LENGTH $OPT_CLIP"
         $cmd
     else
+        _passindex_warn_if_unused_param_set "$OPT_GENERATE_LENGTH" "generated length"
+        _passindex_warn_if_unused_param_set "$OPT_CLIP" "clip"
         pass insert "$id"
     fi
 }
 
 cmd_passindex_show() {
+    _passindex_warn_if_unused_param_set "$OPT_GENERATE_LENGTH" "generated length"
+
     local name id
     read -r -p "enter name: " name
     id="$(pass show $INDEX_NAME | grep "$name" | awk -F ' ' '{print $1}')"
@@ -41,6 +50,9 @@ cmd_passindex_show() {
 }
 
 cmd_passindex_list() {
+    _passindex_warn_if_unused_param_set "$OPT_CLIP" "clip"
+    _passindex_warn_if_unused_param_set "$OPT_GENERATE_LENGTH" "generated length"
+
     pass show $INDEX_NAME | awk -F ' ' '{print $2}'
 }
 
