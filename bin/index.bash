@@ -5,12 +5,12 @@ INDEX_NAME=.index
 UUIDGEN=${PASS_INDEX_UUID_GENERATOR-uuidgen}
 GETOPT=${GETOPT?file must be sources by pass or GETOPT env var set}
 
-_cmd_passindex_fail() {
+_passindex_fail() {
     ((PASS_INDEX_SILENT)) || echo "$*" >&2
     exit 1
 }
 
-_cmd_passindex_update_index() {
+_passindex_update_index() {
     cat << EOF |
 $(pass show $INDEX_NAME 2>/dev/null)
 $1 $2
@@ -27,13 +27,13 @@ cmd_passindex_create() {
         -g|--generate) opt_generate_length="$2"; shift 2 ;;
         --) shift; break ;;
     esac done
-    [ $errs -ne 0 ] && _cmd_passindex_fail "[-g COUNT|--generate=COUNT]"
+    [ $errs -ne 0 ] && _passindex_fail "[-g COUNT|--generate=COUNT]"
 
     local name id
     read -r -p "enter name: " name
     id="$($UUIDGEN)"
 
-    _cmd_passindex_update_index "$id" "$name"
+    _passindex_update_index "$id" "$name"
     if [ "$opt_generate_length" -gt 0 ] ; then
         pass generate "$id" "$opt_generate_length"
     else
@@ -50,7 +50,7 @@ cmd_passindex_show() {
         -c|--clip) opt_clip="--clip"; shift ;;
         --) shift; break ;;
     esac done
-    [ $errs -ne 0 ] && _cmd_passindex_fail "[-c|--clip]"
+    [ $errs -ne 0 ] && _passindex_fail "[-c|--clip]"
 
     local name id
     read -r -p "enter name: " name
@@ -73,5 +73,5 @@ case "$1" in
     create)         shift; cmd_passindex_create "$@" ;;
     ls)             shift; cmd_passindex_list "$@" ;;
     --version)      shift; echo "$NAME" ;;
-    *)              _cmd_passindex_fail "invalid command '$1'" ;
+    *)              _passindex_fail "invalid command '$1'" ;
 esac
