@@ -19,59 +19,58 @@ EOF
 }
 
 cmd_passindex_create() {
-    local args errs opt_generate_length=0
-    args="$($GETOPT -o g: -l generate: -n "$NAME" -- "$@")"
-    errs=$?
-    eval set -- "$args"
-    while true; do case $1 in
-        -g|--generate) opt_generate_length="$2"; shift 2 ;;
-        --) shift; break ;;
-    esac done
-    [ $errs -ne 0 ] && _passindex_fail "[-g COUNT|--generate=COUNT]"
-
     local name id
     read -r -p "enter name: " name
     id="$($UUIDGEN)"
 
     _passindex_update_index "$id" "$name"
-    if [ "$opt_generate_length" -gt 0 ] ; then
-        pass generate "$id" "$opt_generate_length"
+    if [ ! -z "$OPT_GENERATE_LENGTH" ] ; then
+        pass generate "$id" "$OPT_GENERATE_LENGTH"
     else
         pass insert "$id"
     fi
 }
 
 cmd_passindex_show() {
-    local args errs opt_clip=""
-    args="$($GETOPT -o c -l clip -n "$NAME" -- "$@")"
-    errs=$?
-    eval set -- "$args"
-    while true; do case $1 in
-        -c|--clip) opt_clip="--clip"; shift ;;
-        --) shift; break ;;
-    esac done
-    [ $errs -ne 0 ] && _passindex_fail "[-c|--clip]"
-
     local name id
     read -r -p "enter name: " name
     id="$(pass show $INDEX_NAME | grep "$name" | awk -F ' ' '{print $1}')"
 
-    pass show "$id" "$opt_clip"
+    pass show "$id" "$OPT_CLIP"
 }
 
 cmd_passindex_list() {
     pass show $INDEX_NAME | awk -F ' ' '{print $2}'
 }
 
-if [ -z "$1" ] ; then
+_passindex_parse_args() {
+    local args errs
+    args="$($GETOPT -o cg: -l clip,generate: -n "$NAME" -- "$@")"
+    errs=$?
+    eval set -- "$args"
+    while true; do case $1 in
+        -c|--clip)          OPT_CLIP="--clip"; shift ;;
+        -g|--generate)      OPT_GENERATE_LENGTH="$2"; shift 2 ;;
+        --) shift; break ;;
+    esac done
+    [ $errs -ne 0 ] && _passindex_fail "[show|create|ls|--version] [-c|--clip] [-g COUNT|--generate=COUNT]"
+    SUBCOMMAND=$1
+}
+
+SUBCOMMAND=
+OPT_GENERATE_LENGTH=
+OPT_CLIP=
+_passindex_parse_args "$@"
+
+if [ -z "$SUBCOMMAND" ] ; then
     cmd_passindex_list
     exit 0
 fi
 
-case "$1" in
-    show)           shift; cmd_passindex_show "$@" ;;
-    create)         shift; cmd_passindex_create "$@" ;;
-    ls)             shift; cmd_passindex_list "$@" ;;
+case "$SUBCOMMAND" in
+    show)           shift; cmd_passindex_show ;;
+    create)         shift; cmd_passindex_create ;;
+    ls)             shift; cmd_passindex_list ;;
     --version)      shift; echo "$NAME" ;;
-    *)              _passindex_fail "invalid command '$1'" ;
+    *)              _passindex_fail "invalid command '$SUBCOMMAND'" ;
 esac
