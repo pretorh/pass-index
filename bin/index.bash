@@ -57,7 +57,7 @@ cmd_passindex_list() {
     _passindex_warn_if_unused_param_set "$OPT_CLIP" "clip"
     _passindex_warn_if_unused_param_set "$OPT_GENERATE_LENGTH" "generated length"
 
-    pass show $INDEX_NAME | awk -F ' ' '{print $2}'
+    pass show $INDEX_NAME 2>/dev/null | awk -F ' ' '{print $2}'
 }
 
 _passindex_parse_args() {
