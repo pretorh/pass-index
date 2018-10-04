@@ -41,8 +41,22 @@ EOF
         || fail "no uuid found for passname2" "$(pass show .index)"
 }
 
+cannot_create_another_entry_if_already_exists() {
+    failed=0
+    cat << EOF |
+passname1
+password1
+password1
+EOF
+    pass index create || failed=1
+    if [ $failed -eq 0 ] ; then
+        fail "allowed to create another entry with the exact same name"
+    fi
+}
+
 run updates_the_index_file
 run does_not_create_file_named_based_on_password_name
 run create_file_based_on_uuid
 run passwords_are_readable_as_normal_pass_files
 run default_to_using_uuid_for_ids
+run cannot_create_another_entry_if_already_exists

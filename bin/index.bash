@@ -28,6 +28,10 @@ cmd_passindex_create() {
     read -r -p "enter name: " name
     id="$($UUIDGEN)"
 
+    if cmd_passindex_list | grep "^$name$" >/dev/null ; then
+        _passindex_fail "$name is already in the index"
+    fi
+
     _passindex_update_index "$id" "$name"
     if [ ! -z "$OPT_GENERATE_LENGTH" ] ; then
         cmd="pass generate $id $OPT_GENERATE_LENGTH $OPT_CLIP"
