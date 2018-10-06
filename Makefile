@@ -1,9 +1,15 @@
+PREFIX=/usr
+LIBDIR="$(PREFIX)/lib"
+
 all: test
+
+install:
+	install -v bin/index.bash $(LIBDIR)/password-store/extensions
 
 clean:
 	rm -rf tests/.gpg
 
-install-local:
+local-install:
 	install -v bin/index.bash ~/.password-store/.extensions/
 
 test: tests/.gpg
