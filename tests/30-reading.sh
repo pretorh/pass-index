@@ -37,10 +37,7 @@ ls_command_also_shows_password_named_without_keys() {
 }
 
 can_copy_password_to_clipboard() {
-    output="$(echo "example.com" | pass index show --clip)"
-    if echo "$output" | grep "password for test" >"$LOG_FILE" ; then
-        fail "show --clip wrote password to stdout" "$output"
-    fi
+    echo "example.com" | pass index show --clip
 
     pasted="$(paste_from_clipboard)"
     echo "$pasted" | grep "^password for test$" >"$LOG_FILE" \

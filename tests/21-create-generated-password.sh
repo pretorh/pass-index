@@ -12,12 +12,8 @@ can_generate_the_password() {
 }
 
 can_copy_to_clipboard() {
-    output="$(echo "passname2" | \
-        PASS_INDEX_UUID_GENERATOR="echo uuid2" pass index create --generate 64 --clip)"
-
-    if echo "$output" | grep "generated password for.*uuid2.*is" ; then
-        fail "password is in stdout" "$output"
-    fi
+    echo "passname2" | \
+        PASS_INDEX_UUID_GENERATOR="echo uuid2" pass index create --generate 64 --clip
 
     clipboard=$(paste_from_clipboard)
     echo "$clipboard" | grep -E "^.{64}$" >"$LOG_FILE" \
