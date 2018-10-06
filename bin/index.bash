@@ -23,12 +23,16 @@ EOF
     pass insert --multiline $INDEX_NAME
 }
 
+_passindex_list_names() {
+    pass show $INDEX_NAME 2>/dev/null | awk -F ' ' '{print $2}'
+}
+
 cmd_passindex_create() {
     local name id
     read -r -p "enter name: " name
     id="$($UUIDGEN)"
 
-    if cmd_passindex_list | grep "^$name$" >/dev/null ; then
+    if _passindex_list_names | grep "^$name$" >/dev/null ; then
         _passindex_fail "$name is already in the index"
     fi
 
@@ -57,7 +61,7 @@ cmd_passindex_list() {
     _passindex_warn_if_unused_param_set "$OPT_CLIP" "clip"
     _passindex_warn_if_unused_param_set "$OPT_GENERATE_LENGTH" "generated length"
 
-    pass show $INDEX_NAME 2>/dev/null | awk -F ' ' '{print $2}'
+    _passindex_list_names
 }
 
 _passindex_parse_args() {
