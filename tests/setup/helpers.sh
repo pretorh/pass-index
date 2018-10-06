@@ -83,7 +83,7 @@ paste_from_clipboard() {
     if [ "$(uname)" = "Darwin" ] ; then
         pbpaste
     else
-        xclip -out
+        xclip -out -selection clipboard
     fi
 }
 
