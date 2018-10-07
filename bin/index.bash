@@ -6,7 +6,7 @@ UUIDGEN=${PASS_INDEX_UUID_GENERATOR-uuidgen}
 GETOPT=${GETOPT?file must be sources by pass or GETOPT env var set}
 
 _passindex_fail() {
-    ((PASS_INDEX_SILENT)) || echo "$*" >&2
+    ((PASS_INDEX_SILENT)) || echo -e "$*" >&2
     exit 1
 }
 
@@ -52,6 +52,11 @@ cmd_passindex_show() {
 
     local name id
     read -r -p "enter name: " name
+    names=$(_passindex_list_names | grep "$name")
+    if [ "$(echo "$names" | wc -l)" -gt 1 ] ; then
+        _passindex_fail "multiple names match:\\n$names"
+        exit 1
+    fi
     id="$(pass show $INDEX_NAME | grep "$name" | awk -F ' ' '{print $1}')"
 
     pass show "$id" "$OPT_CLIP"

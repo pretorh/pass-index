@@ -44,8 +44,16 @@ can_copy_password_to_clipboard() {
         || fail "did not copy password to clipboard" "$pasted"
 }
 
+do_not_list_if_more_than_one_match() {
+    if echo "example" | pass index show > "$LOG_FILE" 2>/dev/null ; then
+        fail "expected to fail when multiple items match"
+    fi
+}
+
+
 run can_show_password_for_an_item_named_on_stdin
 run show_all_items_when_no_command_specified
 run show_all_items_when_no_command_specified_without_keys
 run ls_command_also_shows_password_named_without_keys
 run can_copy_password_to_clipboard
+run do_not_list_if_more_than_one_match
