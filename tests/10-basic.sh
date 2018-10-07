@@ -20,6 +20,11 @@ fail_on_invalid_sub_command() {
     true
 }
 
+allow_version() {
+    pass index version >"$LOG_FILE" 2>&1
+}
+
 run extention_is_loadable
 run index_file_is_named_different_to_not_clash_with_implicit_show_in_pass
 run fail_on_invalid_sub_command
+run allow_version

@@ -72,6 +72,11 @@ cmd_passindex_list() {
     _passindex_list_names
 }
 
+cmd_passindex_version() {
+    # ignore args without warning
+    echo "$NAME"
+}
+
 _passindex_parse_args() {
     local args errs
     args="$($GETOPT -o cg: -l clip,generate: -n "$NAME" -- "$@")"
@@ -82,7 +87,7 @@ _passindex_parse_args() {
         -g|--generate)      OPT_GENERATE_LENGTH="$2"; shift 2 ;;
         --) shift; break ;;
     esac done
-    [ $errs -ne 0 ] && _passindex_fail "[show|create|ls|--version] [-c|--clip] [-g COUNT|--generate=COUNT]"
+    [ $errs -ne 0 ] && _passindex_fail "[show|create|ls|version] [-c|--clip] [-g COUNT|--generate=COUNT]"
     SUBCOMMAND=$1
 }
 
@@ -100,6 +105,6 @@ case "$SUBCOMMAND" in
     show)           shift; cmd_passindex_show ;;
     create)         shift; cmd_passindex_create ;;
     ls)             shift; cmd_passindex_list ;;
-    --version)      shift; echo "$NAME" ;;
+    version)        shift; cmd_passindex_version ;;
     *)              _passindex_fail "invalid command '$SUBCOMMAND'" ;
 esac
