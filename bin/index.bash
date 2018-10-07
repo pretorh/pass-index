@@ -56,6 +56,9 @@ cmd_passindex_show() {
     if [ "$(echo "$names" | wc -l)" -gt 1 ] ; then
         _passindex_fail "multiple names match:\\n$names"
         exit 1
+    elif [ -z "$names" ] ; then
+        _passindex_fail "no items match"
+        exit 1
     fi
     id="$(pass show $INDEX_NAME | grep "$name" | awk -F ' ' '{print $1}')"
 

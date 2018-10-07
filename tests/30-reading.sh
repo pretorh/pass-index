@@ -50,6 +50,11 @@ do_not_list_if_more_than_one_match() {
     fi
 }
 
+fail_if_none_match() {
+    if echo "q" | pass index show > "$LOG_FILE" 2>/dev/null ; then
+        fail "expected to fail when no items match"
+    fi
+}
 
 run can_show_password_for_an_item_named_on_stdin
 run show_all_items_when_no_command_specified
@@ -57,3 +62,4 @@ run show_all_items_when_no_command_specified_without_keys
 run ls_command_also_shows_password_named_without_keys
 run can_copy_password_to_clipboard
 run do_not_list_if_more_than_one_match
+run fail_if_none_match
