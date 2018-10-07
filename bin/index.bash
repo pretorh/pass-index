@@ -28,6 +28,8 @@ _passindex_list_names() {
 }
 
 cmd_passindex_create() {
+    _passindex_warn_if_unused_param_set "$OPT_GREP" "grep"
+
     local name id
     read -r -p "enter name: " name
     id="$($UUIDGEN)"
@@ -49,6 +51,7 @@ cmd_passindex_create() {
 
 cmd_passindex_show() {
     _passindex_warn_if_unused_param_set "$OPT_GENERATE_LENGTH" "generated length"
+    _passindex_warn_if_unused_param_set "$OPT_GREP" "grep"
 
     local name id
     read -r -p "enter name: " name
@@ -69,7 +72,11 @@ cmd_passindex_list() {
     _passindex_warn_if_unused_param_set "$OPT_CLIP" "clip"
     _passindex_warn_if_unused_param_set "$OPT_GENERATE_LENGTH" "generated length"
 
-    _passindex_list_names
+    if [ "$OPT_GREP" = "1" ] ; then
+        read -r -p "grep: " name
+    fi
+
+    _passindex_list_names | grep "$name"
 }
 
 cmd_passindex_version() {
@@ -79,21 +86,23 @@ cmd_passindex_version() {
 
 _passindex_parse_args() {
     local args errs
-    args="$($GETOPT -o cg: -l clip,generate: -n "$NAME" -- "$@")"
+    args="$($GETOPT -o cg: -l clip,generate:,grep -n "$NAME" -- "$@")"
     errs=$?
     eval set -- "$args"
     while true; do case $1 in
         -c|--clip)          OPT_CLIP="--clip"; shift ;;
         -g|--generate)      OPT_GENERATE_LENGTH="$2"; shift 2 ;;
+        --grep)             OPT_GREP="1"; shift ;;
         --) shift; break ;;
     esac done
-    [ $errs -ne 0 ] && _passindex_fail "[show|create|ls|version] [-c|--clip] [-g COUNT|--generate=COUNT]"
+    [ $errs -ne 0 ] && _passindex_fail "[show|create|ls|version] [-c|--clip] [-g COUNT|--generate=COUNT] [--grep]"
     SUBCOMMAND=$1
 }
 
 SUBCOMMAND=
 OPT_GENERATE_LENGTH=
 OPT_CLIP=
+OPT_GREP=
 _passindex_parse_args "$@"
 
 if [ -z "$SUBCOMMAND" ] ; then
