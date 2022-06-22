@@ -39,7 +39,7 @@ cmd_passindex_create() {
     fi
 
     _passindex_update_index "$id" "$name"
-    if [ ! -z "$OPT_GENERATE_LENGTH" ] ; then
+    if [ -n "$OPT_GENERATE_LENGTH" ] ; then
         cmd="pass generate $id $OPT_GENERATE_LENGTH $OPT_CLIP"
         $cmd
     else
