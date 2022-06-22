@@ -95,5 +95,5 @@ finish() {
 
 trap finish EXIT
 
-expected_test_count="$(grep -c "^run " "$0")"
+expected_test_count="$(grep -c "^\s*run " "$0")"
 echo "1..$expected_test_count"
