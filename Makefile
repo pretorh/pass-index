@@ -13,7 +13,7 @@ local-install:
 	install -v bin/index.bash ~/.password-store/.extensions/
 
 test: tests/.gpg
-	@prove tests/*.sh
+	@prove --directives tests/*.sh
 
 tests/.gpg:
 	sh ./tests/setup/init-test-gpg.sh ./tests/.gpg

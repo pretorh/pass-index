@@ -73,6 +73,12 @@ run() {
     echo "ok $tests_run $pretty_name"
 }
 
+skip() {
+    pretty_name=${1//_/ }
+    tests_run=$((tests_run + 1))
+    echo "not ok $tests_run $pretty_name # TODO $2"
+}
+
 fail() {
     echo "" >&2
     echo "$1" >&2
