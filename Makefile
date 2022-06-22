@@ -12,6 +12,12 @@ clean:
 local-install:
 	install -v bin/index.bash ~/.password-store/.extensions/
 
+check: lint test
+
+lint:
+	@shellcheck --format gcc bin/index.bash tests/*.sh tests/setup/*.sh
+	@echo "lint ok"
+
 test: tests/.gpg
 	@prove --directives tests/*.sh
 
