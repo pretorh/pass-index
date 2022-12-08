@@ -7,14 +7,14 @@ TESTS="$(pwd)/tests"
 # gpg
 
 GNUPGHOME=./tests/.gpg
-GPG_OPTS="--passphrase=passphrase --batch --pinentry-mode loopback"
+GPG_OPTS=("--passphrase=passphrase" "--batch" "--pinentry-mode" "loopback")
 GPG_ID=foo@bar.com
 export GNUPGHOME GPG_OPTS GPG_ID
 
 # pass store
 
 PASSWORD_STORE_DIR=$(mktemp -d -t pass-index-XXXXXXXX)
-PASSWORD_STORE_GPG_OPTS=$GPG_OPTS
+PASSWORD_STORE_GPG_OPTS=${GPG_OPTS[*]}
 PASSWORD_STORE_EXTENSIONS_DIR=$TESTS/../bin
 PASSWORD_STORE_ENABLE_EXTENSIONS=true
 PASSWORD_STORE_CLIP_TIME=2
@@ -49,7 +49,7 @@ tests_run=0
 
 dump_info() {
     echo "dump:"
-    echo "  GPG_OPTS=$GPG_OPTS"
+    echo "  GPG_OPTS=${GPG_OPTS[*]}"
     echo "  GNUPGHOME=$(realpath "$GNUPGHOME")"
     echo "  PASSWORD_STORE_DIR=$PASSWORD_STORE_DIR"
     echo "  PASSWORD_STORE_EXTENSIONS_DIR=$(realpath "$PASSWORD_STORE_EXTENSIONS_DIR")"
