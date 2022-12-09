@@ -11,10 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Install shellcheck
+    - name: Install dependencies
       run: |
-        wget https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz
-        tar -xf shellcheck-stable.linux.x86_64.tar.xz shellcheck-stable/shellcheck --strip-components 1
-        sudo mv shellcheck /usr/bin
+        sudo apt-get update
+        sudo apt-get install shellcheck xclip pass make uuid-runtime --yes
     - name: Run check
       run: make check
