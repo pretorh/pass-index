@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master", "ci/setup-github-actions" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install shellcheck
+      run: |
+        wget https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz
+        tar -xf shellcheck-stable.linux.x86_64.tar.xz shellcheck-stable/shellcheck --strip-components 1
+        sudo mv shellcheck /usr/bin
+    - name: Run check
+      run: make check
