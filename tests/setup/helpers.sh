@@ -79,9 +79,9 @@ run() {
 }
 
 skip() {
-    pretty_name=${1//_/ }
+    pretty_name=${2//_/ }
     tests_run=$((tests_run + 1))
-    echo "not ok $tests_run $pretty_name # TODO $2"
+    echo "not ok $tests_run $pretty_name # TODO $1"
 }
 
 skip_if() {
@@ -89,7 +89,7 @@ skip_if() {
     local script=$2
 
     if [ "$check" ] ; then
-        skip "$script" "conditionally skipped: $check"
+        skip "conditionally skipped: $check" "$script"
     else
         run "$script"
     fi
