@@ -84,6 +84,17 @@ skip() {
     echo "not ok $tests_run $pretty_name # TODO $2"
 }
 
+skip_if() {
+    local check=$1
+    local script=$2
+
+    if [ "$check" ] ; then
+        skip "$script" "conditionally skipped: $check"
+    else
+        run "$script"
+    fi
+}
+
 fail() {
     echo "" >&2
     echo "$1" >&2
@@ -107,5 +118,5 @@ finish() {
 
 trap finish EXIT
 
-expected_test_count="$(grep -c "^\s*run " "$0")"
+expected_test_count="$(grep -cE "^(run|skip|skip_if) " "$0")"
 echo "1..$expected_test_count"
