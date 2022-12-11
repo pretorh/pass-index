@@ -79,9 +79,20 @@ run() {
 }
 
 skip() {
-    pretty_name=${1//_/ }
+    pretty_name=${2//_/ }
     tests_run=$((tests_run + 1))
-    echo "not ok $tests_run $pretty_name # TODO $2"
+    echo "not ok $tests_run $pretty_name # TODO $1"
+}
+
+skip_if() {
+    local reason=$1
+    local script=$2
+
+    if [ "$reason" ] ; then
+        skip "conditionally skipped: $reason" "$script"
+    else
+        run "$script"
+    fi
 }
 
 fail() {
@@ -107,5 +118,5 @@ finish() {
 
 trap finish EXIT
 
-expected_test_count="$(grep -c "^\s*run " "$0")"
+expected_test_count="$(grep -cE "^(run|skip|skip_if) " "$0")"
 echo "1..$expected_test_count"
