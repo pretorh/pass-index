@@ -13,10 +13,10 @@ can_generate_the_password() {
 
 can_copy_to_clipboard() {
     echo "passname2" | \
-        PASS_INDEX_UUID_GENERATOR="echo uuid2" pass index create --generate 64 --clip
+        PASS_INDEX_UUID_GENERATOR="echo uuid2" pass index create --generate 64 --clip 2>"$LOG_FILE"
 
     clipboard=$(paste_from_clipboard)
-    echo "$clipboard" | grep -E "^.{64}$" >"$LOG_FILE" \
+    echo "$clipboard" | grep -E "^.{64}$" >>"$LOG_FILE" \
         || fail "password not found in clipboard" "$clipboard"
 }
 

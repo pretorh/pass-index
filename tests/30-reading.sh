@@ -42,10 +42,10 @@ ls_command_can_grep() {
 }
 
 can_copy_password_to_clipboard() {
-    echo "example.com" | pass index show --clip
+    echo "example.com" | pass index show --clip 2>"$LOG_FILE"
 
     pasted="$(paste_from_clipboard)"
-    echo "$pasted" | grep "^password for test$" >"$LOG_FILE" \
+    echo "$pasted" | grep "^password for test$" >>"$LOG_FILE" \
         || fail "did not copy password to clipboard" "$pasted"
 }
 

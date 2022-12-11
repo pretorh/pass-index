@@ -27,7 +27,9 @@ export PASS_INDEX_SILENT
 
 # helpers
 LOG_FILE=$PASSWORD_STORE_DIR/tests.log
-export LOG_FILE
+CLIP_FILE=$PASSWORD_STORE_DIR/clipboard.log
+PATH="./tests/fake:$PATH"
+export LOG_FILE CLIP_FILE PATH DISPLAY
 
 init_password_store() {
     pass init $GPG_ID >"$LOG_FILE"
@@ -90,10 +92,11 @@ fail() {
 }
 
 paste_from_clipboard() {
-    if [ "$(uname)" = "Darwin" ] ; then
-        pbpaste
+    echo "reading from fake clip file $CLIP_FILE" >>"$LOG_FILE"
+    if [ -f "$CLIP_FILE" ] ; then
+        cat "$CLIP_FILE"
     else
-        xclip -out -selection clipboard
+        echo -n ""
     fi
 }
 
