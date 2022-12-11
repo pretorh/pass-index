@@ -85,11 +85,11 @@ skip() {
 }
 
 skip_if() {
-    local check=$1
+    local reason=$1
     local script=$2
 
-    if [ "$check" ] ; then
-        skip "conditionally skipped: $check" "$script"
+    if [ "$reason" ] ; then
+        skip "conditionally skipped: $reason" "$script"
     else
         run "$script"
     fi
