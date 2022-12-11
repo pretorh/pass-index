@@ -14,6 +14,6 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install shellcheck xclip pass make uuid-runtime --yes
+        sudo apt-get install shellcheck pass make uuid-runtime --yes
     - name: Run check
       run: make check
