@@ -66,6 +66,6 @@ run show_all_items_when_no_command_specified
 run show_all_items_when_no_command_specified_without_keys
 run ls_command_also_shows_password_named_without_keys
 run ls_command_can_grep
-run can_copy_password_to_clipboard
+skip_if "$RUNNING_ON_CI" can_copy_password_to_clipboard
 run do_not_list_if_more_than_one_match
 run fail_if_none_match
