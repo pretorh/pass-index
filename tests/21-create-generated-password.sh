@@ -21,4 +21,4 @@ can_copy_to_clipboard() {
 }
 
 run can_generate_the_password
-run can_copy_to_clipboard
+skip_if "$RUNNING_ON_CI" can_copy_to_clipboard

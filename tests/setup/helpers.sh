@@ -29,7 +29,9 @@ export PASS_INDEX_SILENT
 LOG_FILE=$PASSWORD_STORE_DIR/tests.log
 CLIP_FILE=$PASSWORD_STORE_DIR/clipboard.log
 PATH="./tests/fake:$PATH"
-export LOG_FILE CLIP_FILE PATH
+RUNNING_ON_CI=""
+[ "$CI" ] && RUNNING_ON_CI="running on CI"
+export LOG_FILE CLIP_FILE PATH RUNNING_ON_CI
 
 init_password_store() {
     pass init $GPG_ID >"$LOG_FILE"
