@@ -18,6 +18,10 @@ Create a password using the `pass insert` command, but with a `PASS_INDEX_UUID_G
 
 With `--generate <count>`, use `pass generate <count>` to create the actual password
 
+### `edit`
+
+Read the name from `stdin`, resolve the key-file, and edit the password an editor
+
 ### `show`
 
 Read the name from `stdin`, resolve the key-file, and show the password

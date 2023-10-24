@@ -88,6 +88,21 @@ cmd_passindex_list() {
     _passindex_list_names | grep "$name"
 }
 
+cmd_passindex_edit() {
+    _passindex_warn_if_unused_param_set "$OPT_CLIP" "clip"
+    _passindex_warn_if_unused_param_set "$OPT_GENERATE_LENGTH" "generated length"
+    _passindex_warn_if_unused_param_set "$OPT_GREP" "grep"
+
+    local name id
+    read -r -p "enter name: " name
+    id=$(_passindex_get_item_id "$name")
+    if [ -z "$id" ] ; then
+      exit 1
+    fi
+
+    pass edit "$id"
+}
+
 cmd_passindex_version() {
     # ignore args without warning
     echo "$NAME"
@@ -104,7 +119,7 @@ _passindex_parse_args() {
         --grep)             OPT_GREP="1"; shift ;;
         --) shift; break ;;
     esac done
-    [ $errs -ne 0 ] && _passindex_fail "[show|create|ls|version] [-c|--clip] [-g COUNT|--generate=COUNT] [--grep]"
+    [ $errs -ne 0 ] && _passindex_fail "[show|create|ls|edit|version] [-c|--clip] [-g COUNT|--generate=COUNT] [--grep]"
     SUBCOMMAND=$1
 }
 
@@ -123,6 +138,7 @@ case "$SUBCOMMAND" in
     show)           shift; cmd_passindex_show ;;
     create)         shift; cmd_passindex_create ;;
     ls)             shift; cmd_passindex_list ;;
+    edit)           shift; cmd_passindex_edit ;;
     version)        shift; cmd_passindex_version ;;
     *)              _passindex_fail "invalid command '$SUBCOMMAND'" ;
 esac
