@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-NAME="pass-index v0.0.1"
+NAME="pass-index v0.1.0"
 INDEX_NAME=.index
 UUIDGEN=${PASS_INDEX_UUID_GENERATOR-uuidgen}
 GETOPT=${GETOPT?file must be sources by pass or GETOPT env var set}
