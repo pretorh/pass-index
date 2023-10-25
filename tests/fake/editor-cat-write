@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+echo "fake $(basename "$0") $*" >&2
+cat "$1"
+
+if [ -n "$FAKE_EDITOR_NEW_TEXT" ] ; then
+  echo "fake $(basename "$0") updating $1 from FAKE_EDITOR_NEW_TEXT" >&2
+  echo "$FAKE_EDITOR_NEW_TEXT" > "$1"
+fi

@@ -100,7 +100,9 @@ skip_if() {
 fail() {
     echo "" >&2
     echo "$1" >&2
-    echo -e "$2" >&2
+    if [ "$2" ] ; then
+      echo -e "$2" >&2
+    fi
     false
 }
 
