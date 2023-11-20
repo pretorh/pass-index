@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ "master", "ci/setup-github-actions" ]
+    branches: [ "master", "ci/setup-github-actions", "feat/run-clipboard-test-on-ci" ]
   pull_request:
     branches: [ "master" ]
 
